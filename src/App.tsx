@@ -1,9 +1,15 @@
 import { Home } from "./pages/Home";
-import './styles/tailwind.css'
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { UserDashboard } from "./pages/UserDashboard";
+import "./styles/tailwind.css";
 
 export default function App() {
   return (
-    <Home />
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/user" element={<UserDashboard />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
