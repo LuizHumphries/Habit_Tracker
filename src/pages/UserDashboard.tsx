@@ -1,9 +1,13 @@
+import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 
 export function UserDashboard() {
   return (
-    <main>
+    <div className="flex flex-col h-screen justify-between">
       <Header />
-    </main>
+      <main className="mb-auto">Content</main>
+      {/*<Content /> -- comentario*/}
+      <Footer />
+    </div>
   );
 }
