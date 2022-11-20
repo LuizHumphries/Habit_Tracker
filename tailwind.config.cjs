@@ -19,7 +19,7 @@ module.exports = {
         "red-red": ["#fb7185", "#881337", "#fb7185"],
       },
       background: {
-        slate: "#F8fafc",
+        slate: "rgb(17 24 39)",
       },
       border: {
         // defaults to these values (optional)

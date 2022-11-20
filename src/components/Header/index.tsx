@@ -12,11 +12,12 @@ export function Header() {
         justify-between
         border-b-2
         border-b-solid
-        border-b-red-100
+        border-b-red-400
+        bg-gray-800
       "
     >
-      <h1 className="text-rose-800 text-[48px] text-center">
-        Habbit <span className="text-rose-400">Tracker</span>
+      <h1 className="text-rose-500 text-[48px] text-center">
+        Habbit <span className="text-rose-300">Tracker</span>
       </h1>
       <div className="flex m-auto justify-center align-center gap-4">
         <p className="m-auto">
@@ -25,7 +26,7 @@ export function Header() {
         <SelectDropdownMonths />
       </div>
 
-      <button className="">User Name</button>
+      <button className="text-rose-300">User Name</button>
     </div>
   );
 }
