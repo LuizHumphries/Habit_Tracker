@@ -20,8 +20,7 @@ export function Home() {
 			border-transparent
 			border-solid 
 			border-4 
-			rounded-[1rem]
-			
+			rounded-[1rem]			
 			"
       >
         <h1 className="text-rose-800 text-[72px] text-center">
