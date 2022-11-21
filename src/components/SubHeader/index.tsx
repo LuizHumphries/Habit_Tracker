@@ -10,7 +10,6 @@ export function SubHeader() {
   );
 
   const daysArray = Array.from(Array(maxDaysMonth), (e, i) => i + 1);
-  console.log(daysArray);
 
   return (
     <main className="bg-gray-900 py-4 pl-[4rem] justify-between flex">
@@ -21,7 +20,13 @@ export function SubHeader() {
       </div>
       <div className="flex ml-auto pr-6 gap-9 text-rose-300">
         {daysArray.map((days) => (
-          <div className="">{days}</div>
+          <div
+            key={days}
+            className="text-[14px] h-[14px]
+          w-[14px] text-center"
+          >
+            {days}
+          </div>
         ))}
       </div>
     </main>
