@@ -24,6 +24,7 @@ const customStyles = {
     maxWidth: "720px",
     maxHeight: "720px",
     backgroundColor: "rgba(255, 255, 255, 1)",
+    border: "2px solid rgba(244, 63, 94, 1)",
   },
 };
 
