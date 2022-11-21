@@ -26,11 +26,12 @@ export function Home() {
 		items-center
 		justify-center
 		bg-gray-900
+    
 		"
     >
       <div
         className="
-			p-11			
+			p-12			
 			border-gradient-br-red-red-slate 
 			border-transparent
 			border-solid 
@@ -45,7 +46,7 @@ export function Home() {
           mantenha o controle de seus novos habitos
         </p>
         <div>
-          <div className="inline-grid items-center w-full justify-center h-[6rem] ">
+          <div className="inline-grid items-center w-full justify-center h-full ">
             <input
               type="email"
               value={email}
@@ -59,6 +60,9 @@ export function Home() {
                         rounded-2xl
                         outline-rose-600
                         text-sm
+                        block
+                        px-[20px]
+                        py-[20px]
                         "
             />
             <input
@@ -74,15 +78,16 @@ export function Home() {
                         rounded-2xl
                         outline-rose-600
                         text-sm
+                        block
+                        px-[20px]
+                        py-[20px]
                         "
             />
           </div>
-          <div className="flex w-full justify-center items-center gap-[3rem]">
+          <div className="flex w-full justify-center items-center gap-[3rem] mt-10">
             <form onSubmit={handleSubmit}>
               <button
-                className="
-                mt-10
-                m-auto
+                className="               
                 w-[11rem]
                 p-2
                 bg-rose-500
@@ -103,8 +108,7 @@ export function Home() {
             <form onSubmit={handleSubmit}>
               <button
                 className="
-                mt-10
-                m-auto
+                
                 w-[11rem]
                 p-2
                 bg-rose-300
