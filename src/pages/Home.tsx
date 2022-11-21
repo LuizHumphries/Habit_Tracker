@@ -1,6 +1,21 @@
-import { AiOutlineGoogle } from "react-icons/ai";
+import { useState, useContext, FormEvent } from "react";
+import { AuthContext } from "../contexts/AuthContext";
 
 export function Home() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { signIn } = useContext(AuthContext);
+
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+
+    const data = {
+      email,
+      password,
+    };
+    await signIn(data);
+  }
+
   return (
     <main
       id="page-login"
@@ -29,28 +44,86 @@ export function Home() {
         <p className="text-[28px] text-center text-white">
           mantenha o controle de seus novos habitos
         </p>
-
-        <button
-          className="
-				mt-20
-				w-full
-				p-3
-				bg-rose-400
-				rounded-[1rem]
-				hover:bg-rose-700
-				transition
-				duration-150
-				hover:scale-105
-				text-[18px]
-				flex
-				align-center
-				justify-center
-				gap-2
-				"
-        >
-          <AiOutlineGoogle className="text-[22px] my-auto text-white " />
-          Connect with Google
-        </button>
+        <div>
+          <div className="inline-grid items-center w-full justify-center h-[6rem] ">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="
+                        mt-5
+                        w-[25rem]
+                        h-10
+                        text-center
+                        bg-rose-100
+                        rounded-2xl
+                        outline-rose-600
+                        text-sm
+                        "
+            />
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="
+                        mt-5
+                        w-[25rem]
+                        h-10
+                        text-center
+                        bg-rose-100
+                        rounded-2xl
+                        outline-rose-600
+                        text-sm
+                        "
+            />
+          </div>
+          <div className="flex w-full justify-center items-center gap-[3rem]">
+            <form onSubmit={handleSubmit}>
+              <button
+                className="
+                mt-10
+                m-auto
+                w-[11rem]
+                p-2
+                bg-rose-500
+                rounded-[1rem]
+                hover:bg-rose-700
+                transition
+                duration-150
+                hover:scale-105
+                text-[18px]
+                flex
+                justify-center
+                gap-2
+                "
+              >
+                Login
+              </button>
+            </form>
+            <form onSubmit={handleSubmit}>
+              <button
+                className="
+                mt-10
+                m-auto
+                w-[11rem]
+                p-2
+                bg-rose-300
+                rounded-[1rem]
+                hover:bg-rose-700
+                transition
+                duration-150
+                hover:scale-105
+                text-[18px]
+                flex
+                justify-center
+                gap-2
+                "
+              >
+                Create Account
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
     </main>
   );
