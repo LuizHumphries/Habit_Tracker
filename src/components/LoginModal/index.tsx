@@ -1,7 +1,11 @@
+import { FormEvent, useState } from "react";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../services/firebase";
 import Modal from "react-modal";
 import iconClose from "../../assets/images/iconclose.svg";
+import { appendFile } from "fs";
 
-interface LoginModalProps {
+interface SignUpModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
 }
@@ -28,7 +32,38 @@ const customStyles = {
   },
 };
 
-export function LoginModal({ isOpen, onRequestClose }: LoginModalProps) {
+export function SignUpModal({ isOpen, onRequestClose }: SignUpModalProps) {
+  const [userSignUp, setUserSignUp] = useState("");
+  const [emailSignUp, setEmailSignUp] = useState("");
+  const [passwordSignUp, setPasswordSignUp] = useState("");
+  const [equalPasswordSignUp, setEqualPasswordSignUp] = useState("");
+
+  async function handleUserCreation(event: FormEvent) {
+    event.preventDefault();
+    const data = {
+      userSignUp,
+      emailSignUp,
+      passwordSignUp,
+    };
+
+    if (passwordSignUp !== equalPasswordSignUp) {
+      console.log("differing password");
+      onRequestClose();
+      return;
+    }
+
+    console.log({ data });
+    const userCollectionRef = collection(db, "user");
+
+    addDoc(userCollectionRef, { data })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  }
+
   return (
     <Modal isOpen={isOpen} onRequestClose={onRequestClose} style={customStyles}>
       <button
@@ -43,23 +78,35 @@ export function LoginModal({ isOpen, onRequestClose }: LoginModalProps) {
         <input
           placeholder="name"
           className="h-9 text-center bg-opacity-20 bg-rose-500 rounded-[1rem] w-[25rem]  focus:outline-rose-500"
+          value={userSignUp}
+          onChange={(event) => setUserSignUp(event.target.value)}
         />
         <input
           type="email"
           placeholder="email"
           className="mt-[1rem] h-9 text-center bg-opacity-20 bg-rose-500 rounded-[1rem] w-[25rem]  focus:outline-rose-500"
+          value={emailSignUp}
+          onChange={(event) => setEmailSignUp(event.target.value)}
         />
         <input
           type="password"
           placeholder="password"
           className="mt-[1rem] h-9 text-center bg-opacity-20 bg-rose-500 rounded-[1rem] w-[25rem]  focus:outline-rose-500"
+          value={passwordSignUp}
+          onChange={(event) => setPasswordSignUp(event.target.value)}
         />
         <input
           type="password"
           placeholder="repeat password"
           className="mt-[1rem] h-9 text-center bg-opacity-20 bg-rose-500 rounded-[1rem] w-[25rem]  focus:outline-rose-500"
+          value={equalPasswordSignUp}
+          onChange={(event) => setEqualPasswordSignUp(event.target.value)}
         />
-        <button className="mt-[5rem] border-solid border-1 border-rose bg-pink-600 rounded-[1rem] w-[25rem] h-[2rem] hover:scale-105 ">
+        <button
+          type="button"
+          onClick={handleUserCreation}
+          className="mt-[5rem] border-solid border-1 border-rose bg-pink-600 rounded-[1rem] w-[25rem] h-[2rem] hover:scale-105 "
+        >
           Register
         </button>
       </form>

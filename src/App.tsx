@@ -1,11 +1,12 @@
 import { Home } from "./pages/Home";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { UserDashboard } from "./pages/UserDashboard";
-import "./styles/tailwind.css";
 import { AuthProvider } from "./contexts/AuthContext";
-import Modal from "react-modal";
 import { useState } from "react";
-import { LoginModal } from "./components/LoginModal";
+import { SignUpModal } from "./components/LoginModal";
+import Modal from "react-modal";
+
+import "./styles/tailwind.css";
 
 Modal.setAppElement("#root");
 
@@ -22,7 +23,7 @@ export default function App() {
 
   return (
     <>
-      <LoginModal
+      <SignUpModal
         isOpen={isSignUpModalOpen}
         onRequestClose={handleCloseNewSignupModal}
       />
