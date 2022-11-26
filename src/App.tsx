@@ -22,23 +22,20 @@ export default function App() {
   }
 
   return (
-    <>
-      <SignUpModal
-        isOpen={isSignUpModalOpen}
-        onRequestClose={handleCloseNewSignupModal}
-      />
-      <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route
-              path="/"
-              element={<Home onOpenSignupModal={handleOpenNewSignupModal} />}
-            />
-
-            <Route path="/user" element={<UserDashboard />} />
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
-    </>
+    <AuthProvider>
+      <BrowserRouter>
+        <SignUpModal
+          isOpen={isSignUpModalOpen}
+          onRequestClose={handleCloseNewSignupModal}
+        />
+        <Routes>
+          <Route
+            path="/"
+            element={<Home onOpenSignupModal={handleOpenNewSignupModal} />}
+          />
+          <Route path="/user" element={<UserDashboard />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }

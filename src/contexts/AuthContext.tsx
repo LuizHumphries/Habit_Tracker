@@ -1,31 +1,81 @@
-import { createContext } from "react";
+import {
+  ReactNode,
+  useEffect,
+  useState,
+  useContext,
+  createContext,
+} from "react";
+import { auth } from "../services/firebase";
+import {
+  Auth,
+  UserCredential,
+  User,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+} from "firebase/auth";
+import firebase from "firebase/app";
+import { FireStore } from "firebase/app";
+export interface AuthProviderProps {
+  children?: ReactNode;
+}
 
-type SignInCredentials = {
-  email: string;
-  password: string;
-};
-
-type AuthContextData = {
-  signIn(credentials: SignInCredentials): Promise<void>;
+export interface UserContextState {
   isAuthenticated: boolean;
-};
+  isLoading: boolean;
+  id?: string;
+}
 
-type AuthProviderProps = {
-  children: React.ReactNode;
-};
+export const UserStateContext = createContext<UserContextState>(
+  {} as UserContextState
+);
+export interface AuthContextModel {
+  auth: Auth;
+  user: User | null;
+  signIn: (email: string, password: string) => Promise<UserCredential>;
+  signUp: (email: string, password: string) => Promise<UserCredential>;
+  sendPasswordResetEmail?: (email: string) => Promise<void>;
+}
 
-export const AuthContext = createContext({} as AuthContextData);
+export const AuthContext = createContext<AuthContextModel>(
+  {} as AuthContextModel
+);
 
-export function AuthProvider({ children }: AuthProviderProps) {
-  const isAuthenticated = false;
+export function useAuth(): AuthContextModel {
+  return useContext(AuthContext);
+}
 
-  async function signIn({ email, password }: SignInCredentials) {
-    console.log({ email, password });
+export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
+  const [user, setUser] = useState<User | null>(null);
+
+  function signUp(email: string, password: string): Promise<UserCredential> {
+    return createUserWithEmailAndPassword(auth, email, password);
   }
 
-  return (
-    <AuthContext.Provider value={{ signIn, isAuthenticated }}>
-      {children}
-    </AuthContext.Provider>
-  );
-}
+  function signIn(email: string, password: string): Promise<UserCredential> {
+    return signInWithEmailAndPassword(auth, email, password);
+  }
+  function resetPassword(email: string): Promise<void> {
+    return sendPasswordResetEmail(auth, email);
+  }
+  useEffect(() => {
+    //function that firebase notifies you if a user is set
+    const unsubsrcibe = auth.onAuthStateChanged((user) => {
+      setUser(user);
+    });
+    return unsubsrcibe;
+  }, []);
+
+  const values = {
+    signUp,
+    user,
+    signIn,
+    resetPassword,
+    auth,
+  };
+  return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
+};
+
+export const useUserContext = (): UserContextState => {
+  return useContext(UserStateContext);
+};

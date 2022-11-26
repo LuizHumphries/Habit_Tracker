@@ -1,13 +1,18 @@
-import { FormEvent, useState } from "react";
-import { collection, addDoc } from "firebase/firestore";
-import { db } from "../../services/firebase";
+import { FirebaseAuthInvalidCredentialsException } from "firebase";
+import { FormEvent, useContext, useState } from "react";
 import Modal from "react-modal";
 import iconClose from "../../assets/images/iconclose.svg";
-import { appendFile } from "fs";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface SignUpModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
+}
+
+interface SignUpFormValues {
+  email: string;
+  password: string;
+  repeatPassword: string;
 }
 
 const customStyles = {
@@ -37,31 +42,14 @@ export function SignUpModal({ isOpen, onRequestClose }: SignUpModalProps) {
   const [emailSignUp, setEmailSignUp] = useState("");
   const [passwordSignUp, setPasswordSignUp] = useState("");
   const [equalPasswordSignUp, setEqualPasswordSignUp] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const { signUp } = useAuth();
 
   async function handleUserCreation(event: FormEvent) {
     event.preventDefault();
-    const data = {
-      userSignUp,
-      emailSignUp,
-      passwordSignUp,
-    };
-
-    if (passwordSignUp !== equalPasswordSignUp) {
-      console.log("differing password");
-      onRequestClose();
-      return;
-    }
-
-    console.log({ data });
-    const userCollectionRef = collection(db, "user");
-
-    addDoc(userCollectionRef, { data })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
+    setErrorMessage("");
+    await signUp(emailSignUp, passwordSignUp);
   }
 
   return (
@@ -73,7 +61,10 @@ export function SignUpModal({ isOpen, onRequestClose }: SignUpModalProps) {
       >
         <img src={iconClose} alt="closeModal" className="h-[20px] w-[20px]" />
       </button>
-      <form className="flex flex-col items-center justify-center m-auto">
+      <form
+        className="flex flex-col items-center justify-center m-auto"
+        onSubmit={handleUserCreation}
+      >
         <h2 className="mb-[5rem] text-3xl">Sign Up</h2>
         <input
           placeholder="name"

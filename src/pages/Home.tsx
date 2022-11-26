@@ -1,23 +1,23 @@
 import { useState, useContext, FormEvent } from "react";
-import { AuthContext } from "../contexts/AuthContext";
-
+import { useNavigate } from "react-router-dom";
+import { AuthContext, useAuth } from "../contexts/AuthContext";
 interface HomeProps {
   onOpenSignupModal: () => void;
 }
 
 export function Home({ onOpenSignupModal }: HomeProps) {
+  const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { signIn } = useContext(AuthContext);
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
-  async function handleSubmit(event: FormEvent) {
+  async function handleUserlogin(event: FormEvent) {
     event.preventDefault();
+    setErrorMessage("");
 
-    const data = {
-      email,
-      password,
-    };
-    await signIn(data);
+    await signIn(email, password);
+    navigate("/user");
   }
 
   return (
@@ -50,7 +50,7 @@ export function Home({ onOpenSignupModal }: HomeProps) {
             />
           </div>
           <div className="flex w-full justify-center items-center gap-[3rem] mt-10">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleUserlogin}>
               <button className=" w-[11rem] p-2 bg-rose-500 rounded-[1rem] hover:bg-rose-700 transition duration-150 hover:scale-105 text-[18px] flex justify-center gap-2 ">
                 Login
               </button>
