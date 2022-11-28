@@ -7,18 +7,26 @@ import { SignUpModal } from "./components/LoginModal";
 import Modal from "react-modal";
 
 import "./styles/tailwind.css";
+import { HabitModal } from "./components/HabitModal";
 
 Modal.setAppElement("#root");
 
 export default function App() {
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
+  const [isHabitModalOpen, setIsHabitModalOpen] = useState(false);
 
   function handleOpenNewSignupModal() {
     setIsSignUpModalOpen(true);
   }
+  function handleOpenHabitModal() {
+    setIsHabitModalOpen(true);
+  }
 
   function handleCloseNewSignupModal() {
     setIsSignUpModalOpen(false);
+  }
+  function handleCloseHabitModal() {
+    setIsHabitModalOpen(false);
   }
 
   return (
@@ -28,12 +36,21 @@ export default function App() {
           isOpen={isSignUpModalOpen}
           onRequestClose={handleCloseNewSignupModal}
         />
+        <HabitModal
+          isOpen={isHabitModalOpen}
+          onRequestClose={handleCloseHabitModal}
+        />
         <Routes>
           <Route
             path="/"
             element={<Home onOpenSignupModal={handleOpenNewSignupModal} />}
           />
-          <Route path="/user" element={<UserDashboard />} />
+          <Route
+            path="/user"
+            element={
+              <UserDashboard handleOpenHabitModal={handleOpenHabitModal} />
+            }
+          />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

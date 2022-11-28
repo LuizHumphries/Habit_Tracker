@@ -1,33 +1,33 @@
 import { useState } from "react";
+import { useMonth } from "../../hooks/useMonth";
 import { StyledCheckbox } from "../StyledCheckbox";
 
 interface StyledCheckboxProps {
   days: number;
 }
 
-export function HabitContent() {
-  const [habit, setHabit] = useState("");
+export function Habit() {
+  const { contextMonth } = useMonth();
+
+  function getMonthFromString(mon: string) {
+    return new Date(Date.parse(mon + " 1, 2012")).getMonth() + 1;
+  }
+
   function daysInMonth(month: number, year: number) {
     return new Date(year, month, 0).getDate();
   }
   const maxDaysMonth = daysInMonth(
-    new Date().getMonth() + 1,
+    getMonthFromString(contextMonth),
     new Date().getFullYear()
   );
 
   const daysArray = Array.from(Array(maxDaysMonth), (e, i) => i + 1);
 
   return (
-    <div className="flex ml-10 mt-4">
-      <form>
-        <input
-          type="text"
-          id="habit-name"
-          value={habit}
-          onChange={(e) => setHabit(e.target.value)}
-          className="text-rose-700 bg-gray-900 outline-0 h-[14px] w-[20rem] border-0 border-b-2 border-b-rose-400 pb-1 text-center"
-        ></input>
-      </form>
+    <div className="flex p-[2rem] flex justify-center items-center text-center">
+      <div className="flex justify-center items-center text-center max-w-[256px] w-[256px] border-[1px] border-solid rounded-[1rem]">
+        Habit
+      </div>
       <div className="flex ml-auto pr-6 gap-9">
         {daysArray.map((days) => (
           <div key={days}>

@@ -1,19 +1,23 @@
-import { Footer } from "../components/Footer";
-import { HabitContent } from "../components/HabitContent";
-import { Header } from "../components/Header";
-import { SubHeader } from "../components/SubHeader";
 import { MonthProvider } from "../contexts/MonthContext";
+import { DashboardHeader } from "../components/DashboardHeader";
+import { DashboardSubHeader } from "../components/DashboardSubHeader";
+import { Habit } from "../components/Habit";
+import { DashboardFooter } from "../components/DashboardFooter";
 
-export function UserDashboard() {
+interface UserDashboardProps {
+  handleOpenHabitModal: () => void;
+}
+
+export function UserDashboard({ handleOpenHabitModal }: UserDashboardProps) {
   return (
     <MonthProvider>
       <div className="flex flex-col h-screen justify-between ">
-        <Header />
-        <SubHeader />
+        <DashboardHeader />
+        <DashboardSubHeader handleOpenHabitModal={handleOpenHabitModal} />
         <main className="mb-auto bg-gray-900 text-white h-full text-center align-center">
-          <HabitContent />
+          <Habit />
         </main>
-        <Footer />
+        <DashboardFooter />
       </div>
     </MonthProvider>
   );

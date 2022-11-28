@@ -1,7 +1,7 @@
 import { IoCalendarOutline } from "react-icons/io5";
 import SelectDropdownMonths from "../SelectMenu";
 
-export function Header() {
+export function DashboardHeader() {
   return (
     <div
       className="

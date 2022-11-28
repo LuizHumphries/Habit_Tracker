@@ -1,6 +1,7 @@
 import { useState, useContext, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext, useAuth } from "../contexts/AuthContext";
+
 interface HomeProps {
   onOpenSignupModal: () => void;
 }

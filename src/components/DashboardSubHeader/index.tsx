@@ -1,7 +1,13 @@
 import { IoAdd } from "react-icons/io5";
 import { useMonth } from "../../hooks/useMonth";
 
-export function SubHeader() {
+interface DashboardSubHeaderProps {
+  handleOpenHabitModal: () => void;
+}
+
+export function DashboardSubHeader({
+  handleOpenHabitModal,
+}: DashboardSubHeaderProps) {
   const { contextMonth } = useMonth();
 
   function getMonthFromString(mon: string) {
@@ -19,9 +25,9 @@ export function SubHeader() {
   const daysArray = Array.from(Array(maxDaysMonth), (e, i) => i + 1);
 
   return (
-    <main className="bg-gray-900 py-4 pl-[4rem] justify-between flex">
+    <main className="bg-gray-900 py-4 px-[2rem] justify-between flex">
       <div>
-        <button>
+        <button onClick={handleOpenHabitModal}>
           <IoAdd className="text-rose-300 text-[24px] transition duration-150 hover:scale-105 hover:text-rose-600" />
         </button>
       </div>
