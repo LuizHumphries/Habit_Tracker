@@ -4,15 +4,9 @@ import Modal from "react-modal";
 import iconClose from "../../assets/images/iconclose.svg";
 import { useAuth } from "../../contexts/AuthContext";
 
-interface SignUpModalProps {
+interface HabitModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
-}
-
-interface SignUpFormValues {
-  email: string;
-  password: string;
-  repeatPassword: string;
 }
 
 const customStyles = {
@@ -20,7 +14,7 @@ const customStyles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.7)",
+    backgroundColor: "rgba(17, 24, 39, 0.97)",
   },
   content: {
     position: "relative",
@@ -32,25 +26,13 @@ const customStyles = {
     width: "100%",
     maxWidth: "720px",
     maxHeight: "720px",
-    backgroundColor: "rgba(255, 255, 255, 1)",
+    backgroundColor: "#ec4b6652",
     border: "2px solid rgba(244, 63, 94, 1)",
   },
 };
 
-export function HabitModal({ isOpen, onRequestClose }: SignUpModalProps) {
-  const [userSignUp, setUserSignUp] = useState("");
-  const [emailSignUp, setEmailSignUp] = useState("");
-  const [passwordSignUp, setPasswordSignUp] = useState("");
-  const [equalPasswordSignUp, setEqualPasswordSignUp] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const { signUp } = useAuth();
-
-  async function handleUserCreation(event: FormEvent) {
-    event.preventDefault();
-    setErrorMessage("");
-    await signUp(emailSignUp, passwordSignUp);
-  }
+export function HabitModal({ isOpen, onRequestClose }: HabitModalProps) {
+  const [userHabit, setUserHabit] = useState("");
 
   return (
     <Modal isOpen={isOpen} onRequestClose={onRequestClose} style={customStyles}>
@@ -61,44 +43,19 @@ export function HabitModal({ isOpen, onRequestClose }: SignUpModalProps) {
       >
         <img src={iconClose} alt="closeModal" className="h-[20px] w-[20px]" />
       </button>
-      <form
-        className="flex flex-col items-center justify-center m-auto"
-        onSubmit={handleUserCreation}
-      >
-        <h2 className="mb-[5rem] text-3xl">Sign Up</h2>
+      <form className="flex flex-col items-center justify-center m-auto gap-5">
+        <h2 className="mb-[5rem] text-3xl text-white">Create Your Habit</h2>
         <input
           placeholder="name"
-          className="h-9 text-center bg-opacity-20 bg-rose-500 rounded-[1rem] w-[25rem]  focus:outline-rose-500"
-          value={userSignUp}
-          onChange={(event) => setUserSignUp(event.target.value)}
-        />
-        <input
-          type="email"
-          placeholder="email"
-          className="mt-[1rem] h-9 text-center bg-opacity-20 bg-rose-500 rounded-[1rem] w-[25rem]  focus:outline-rose-500"
-          value={emailSignUp}
-          onChange={(event) => setEmailSignUp(event.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="password"
-          className="mt-[1rem] h-9 text-center bg-opacity-20 bg-rose-500 rounded-[1rem] w-[25rem]  focus:outline-rose-500"
-          value={passwordSignUp}
-          onChange={(event) => setPasswordSignUp(event.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="repeat password"
-          className="mt-[1rem] h-9 text-center bg-opacity-20 bg-rose-500 rounded-[1rem] w-[25rem]  focus:outline-rose-500"
-          value={equalPasswordSignUp}
-          onChange={(event) => setEqualPasswordSignUp(event.target.value)}
+          className="h-9 text-center  w-[25rem] bg-opacity-20 bg-gray-400 focus:outline-gray-500 border-b-2 border-gray-300 "
+          value={userHabit}
+          onChange={(event) => setUserHabit(event.target.value)}
         />
         <button
           type="button"
-          onClick={handleUserCreation}
-          className="mt-[5rem] border-solid border-1 border-rose bg-pink-600 rounded-[1rem] w-[25rem] h-[2rem] hover:scale-105 "
+          className="mt-[5rem] border-solid border-1 border-rose bg-purple-600 bg-opacity-40 rounded-[1rem] w-[25rem] h-[2rem] hover:scale-105 "
         >
-          Register
+          Confirm
         </button>
       </form>
     </Modal>

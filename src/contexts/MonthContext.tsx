@@ -5,7 +5,7 @@ interface MonthProviderProps {
 }
 
 type MonthContextType = {
-  contextMonth: string;
+  contextMonth: string | undefined;
   publishingOptions: string[];
   handleMonthSelected: (month: string) => void;
 };
