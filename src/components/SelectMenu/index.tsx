@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import { useMonth } from "../../hooks/useMonth";
@@ -15,7 +15,7 @@ export default function SelectDropdownMonths() {
   }, [contextMonth]);
 
   return (
-    <Listbox value={contextMonth} onChange={handleMonthSelected(contextMonth)}>
+    <Listbox onChange={(e) => handleMonthSelected(e)}>
       {({ open }) => (
         <>
           <Listbox.Label className="sr-only">

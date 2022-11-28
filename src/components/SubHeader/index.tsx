@@ -1,11 +1,18 @@
 import { IoAdd } from "react-icons/io5";
+import { useMonth } from "../../hooks/useMonth";
 
 export function SubHeader() {
+  const { contextMonth } = useMonth();
+
+  function getMonthFromString(mon: string) {
+    return new Date(Date.parse(mon + " 1, 2012")).getMonth() + 1;
+  }
+
   function daysInMonth(month: number, year: number) {
     return new Date(year, month, 0).getDate();
   }
   const maxDaysMonth = daysInMonth(
-    new Date().getMonth() + 1,
+    getMonthFromString(contextMonth),
     new Date().getFullYear()
   );
 
