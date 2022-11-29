@@ -1,8 +1,10 @@
-import { FirebaseAuthInvalidCredentialsException } from "firebase";
-import { FormEvent, useContext, useState } from "react";
+import db from "../../services/firebase";
+
 import Modal from "react-modal";
-import iconClose from "../../assets/images/iconclose.svg";
+import { FormEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import iconClose from "../../assets/images/iconclose.svg";
 
 interface SignUpModalProps {
   isOpen: boolean;
@@ -42,14 +44,26 @@ export function SignUpModal({ isOpen, onRequestClose }: SignUpModalProps) {
   const [emailSignUp, setEmailSignUp] = useState("");
   const [passwordSignUp, setPasswordSignUp] = useState("");
   const [equalPasswordSignUp, setEqualPasswordSignUp] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
 
-  const { signUp } = useAuth();
+  const { signUp, addUserSignUp, signIn } = useAuth();
+  const navigate = useNavigate();
 
   async function handleUserCreation(event: FormEvent) {
     event.preventDefault();
-    setErrorMessage("");
-    await signUp(emailSignUp, passwordSignUp);
+
+    try {
+      await signUp(emailSignUp, passwordSignUp).catch(function (err) {
+        var errorCode = err.code;
+        if (errorCode === "auth/email-already-in-use") {
+          alert("Email already in use");
+          throw err;
+        }
+      });
+      await addUserSignUp(userSignUp, emailSignUp);
+      onRequestClose();
+      await signIn(emailSignUp, passwordSignUp);
+      navigate("/user");
+    } catch {}
   }
 
   return (
@@ -94,8 +108,7 @@ export function SignUpModal({ isOpen, onRequestClose }: SignUpModalProps) {
           onChange={(event) => setEqualPasswordSignUp(event.target.value)}
         />
         <button
-          type="button"
-          onClick={handleUserCreation}
+          type="submit"
           className="mt-[5rem] border-solid border-1 border-rose bg-pink-600 rounded-[1rem] w-[25rem] h-[2rem] hover:scale-105 "
         >
           Register

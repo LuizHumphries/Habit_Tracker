@@ -1,14 +1,29 @@
+import { useEffect } from "react";
 import { IoCalendarOutline } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 import SelectDropdownMonths from "../SelectMenu";
 
 export function DashboardHeader() {
+  const { logOff, user } = useAuth();
+  const navigate = useNavigate();
+
+  async function handleLogOff() {
+    try {
+      await logOff();
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <div
       className="
         flex
         px-[2rem]
         py-[0.5rem]
-        align-center
+        text-center
         justify-between
         border-b-2
         border-b-solid
@@ -24,10 +39,9 @@ export function DashboardHeader() {
         <SelectDropdownMonths />
       </div>
 
-      <button className="text-rose-300">User Name</button>
+      <button className="text-rose-300" onClick={handleLogOff}>
+        {user?.email}
+      </button>
     </div>
   );
 }
-
-//componentizar butoes dos meses
-// deixei de maneira estatica apenas para teste visual

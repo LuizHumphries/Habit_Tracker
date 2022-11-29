@@ -1,4 +1,4 @@
-import { useState, useContext, FormEvent } from "react";
+import { useState, useContext, FormEvent, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext, useAuth } from "../contexts/AuthContext";
 
@@ -10,15 +10,16 @@ export function Home({ onOpenSignupModal }: HomeProps) {
   const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   async function handleUserlogin(event: FormEvent) {
     event.preventDefault();
-    setErrorMessage("");
-
-    await signIn(email, password);
-    navigate("/user");
+    try {
+      await signIn(email, password);
+      navigate("/user");
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   return (
@@ -36,6 +37,7 @@ export function Home({ onOpenSignupModal }: HomeProps) {
         <div>
           <div className="inline-grid items-center w-full justify-center h-full ">
             <input
+              name="myEmail"
               placeholder="Enter login"
               type="email"
               value={email}
@@ -43,6 +45,7 @@ export function Home({ onOpenSignupModal }: HomeProps) {
               className=" mt-5 w-[25rem] h-10 text-center bg-rose-100 rounded-2xl outline-rose-600 text-sm block px-[20px] py-[20px] "
             />
             <input
+              name="myPassword"
               placeholder="Enter password"
               type="password"
               value={password}
@@ -51,11 +54,13 @@ export function Home({ onOpenSignupModal }: HomeProps) {
             />
           </div>
           <div className="flex w-full justify-center items-center gap-[3rem] mt-10">
-            <form onSubmit={handleUserlogin}>
-              <button className=" w-[11rem] p-2 bg-rose-500 rounded-[1rem] hover:bg-rose-700 transition duration-150 hover:scale-105 text-[18px] flex justify-center gap-2 ">
-                Login
-              </button>
-            </form>
+            <button
+              onClick={handleUserlogin}
+              className=" w-[11rem] p-2 bg-rose-500 rounded-[1rem] hover:bg-rose-700 transition duration-150 hover:scale-105 text-[18px] flex justify-center gap-2 "
+            >
+              Login
+            </button>
+
             <button
               onClick={onOpenSignupModal}
               className="w-[11rem] p-2 bg-rose-300 rounded-[1rem] hover:bg-rose-700 transition duration-150 hover:scale-105 text-[18px] flex justify-center gap-2 "

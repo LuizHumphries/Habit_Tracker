@@ -5,17 +5,23 @@ import {
   useContext,
   createContext,
 } from "react";
-import { auth } from "../services/firebase";
+import { auth, db } from "../services/firebase";
 import {
   Auth,
   UserCredential,
   User,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  sendPasswordResetEmail,
+  signOut,
 } from "firebase/auth";
-import firebase from "firebase/app";
-import { FireStore } from "firebase/app";
+import {
+  doc,
+  setDoc,
+  DocumentData,
+  getDoc,
+  DocumentSnapshot,
+} from "firebase/firestore";
+
 export interface AuthProviderProps {
   children?: ReactNode;
 }
@@ -35,6 +41,8 @@ export interface AuthContextModel {
   signIn: (email: string, password: string) => Promise<UserCredential>;
   signUp: (email: string, password: string) => Promise<UserCredential>;
   sendPasswordResetEmail?: (email: string) => Promise<void>;
+  logOff: () => Promise<UserCredential>;
+  addUserSignUp: (user: string, email: string) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextModel>(
@@ -55,9 +63,18 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
   function signIn(email: string, password: string): Promise<UserCredential> {
     return signInWithEmailAndPassword(auth, email, password);
   }
-  function resetPassword(email: string): Promise<void> {
-    return sendPasswordResetEmail(auth, email);
+
+  function logOff() {
+    return signOut(auth);
   }
+
+  function addUserSignUp(user: string, email: string) {
+    setDoc(doc(db, "/users", email), {
+      user: user,
+      email: email,
+    });
+  }
+
   useEffect(() => {
     //function that firebase notifies you if a user is set
     const unsubsrcibe = auth.onAuthStateChanged((user) => {
@@ -70,9 +87,11 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
     signUp,
     user,
     signIn,
-    resetPassword,
+    logOff,
     auth,
+    addUserSignUp,
   };
+
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };
 

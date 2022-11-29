@@ -2,7 +2,7 @@ import { FirebaseAuthInvalidCredentialsException } from "firebase";
 import { FormEvent, useContext, useState } from "react";
 import Modal from "react-modal";
 import iconClose from "../../assets/images/iconclose.svg";
-import { useAuth } from "../../contexts/AuthContext";
+import db from "../../services/firebase";
 
 interface HabitModalProps {
   isOpen: boolean;
@@ -33,6 +33,15 @@ const customStyles = {
 
 export function HabitModal({ isOpen, onRequestClose }: HabitModalProps) {
   const [userHabit, setUserHabit] = useState("");
+
+  function handleHabitToFirebase(event: FormEvent) {
+    event.preventDefault();
+    try {
+      return;
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   return (
     <Modal isOpen={isOpen} onRequestClose={onRequestClose} style={customStyles}>
