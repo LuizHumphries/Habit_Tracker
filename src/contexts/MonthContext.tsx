@@ -5,7 +5,7 @@ interface MonthProviderProps {
 }
 
 type MonthContextType = {
-  contextMonth: string | undefined;
+  contextMonth: string;
   publishingOptions: string[];
   handleMonthSelected: (month: string) => void;
 };
@@ -29,10 +29,10 @@ export const MonthProvider = ({
     "November",
     "December",
   ];
+
   const monthNow = new Date().toLocaleString("en-US", { month: "long" });
-  const [contextMonth, setContextMonth] = useState(
-    publishingOptions.find((x) => x === monthNow)
-  );
+
+  const [contextMonth, setContextMonth] = useState(monthNow);
 
   function handleMonthSelected(month: string) {
     setContextMonth(month);

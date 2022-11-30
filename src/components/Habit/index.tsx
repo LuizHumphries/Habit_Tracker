@@ -24,11 +24,11 @@ export function Habit() {
   const daysArray = Array.from(Array(maxDaysMonth), (e, i) => i + 1);
 
   return (
-    <div className="flex p-[2rem] flex justify-center items-center text-center">
+    <div className="flex p-[2rem] justify-center items-center text-center">
       <div className="flex justify-center items-center text-center max-w-[256px] w-[256px] border-[1px] border-solid rounded-[1rem]">
         Habit
       </div>
-      <div className="flex ml-auto pr-6 gap-9">
+      <div className="flex ml-auto pr-6 gap-5 2xl:gap-9">
         {daysArray.map((days) => (
           <div key={days}>
             <StyledCheckbox />

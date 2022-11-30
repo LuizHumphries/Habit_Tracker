@@ -18,8 +18,9 @@ export function DashboardHeader() {
   }
 
   return (
-    <div
+    <header
       className="
+        w-full
         flex
         px-[2rem]
         py-[0.5rem]
@@ -31,17 +32,19 @@ export function DashboardHeader() {
         bg-gray-800
       "
     >
-      <h1 className="text-rose-500 text-[48px] text-center">
-        Habbit <span className="text-rose-300">Tracker</span>
-      </h1>
-      <div className="flex justify-center align-midle items-center">
-        <IoCalendarOutline className="text-rose-600 text-4xl mr-2" />
-        <SelectDropdownMonths />
+      <div className="flex w-[55%] justify-between">
+        <h1 className="text-rose-500 text-[48px] text-center">
+          Habbit <span className="text-rose-300">Tracker</span>
+        </h1>
+        <div className="flex justify-center items-center">
+          <IoCalendarOutline className="text-rose-600 text-4xl mr-2" />
+          <SelectDropdownMonths />
+        </div>
       </div>
 
       <button className="text-rose-300" onClick={handleLogOff}>
         {user?.email}
       </button>
-    </div>
+    </header>
   );
 }

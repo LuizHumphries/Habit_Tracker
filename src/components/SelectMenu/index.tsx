@@ -3,7 +3,7 @@ import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import { useMonth } from "../../hooks/useMonth";
 
-function classNames(...classes) {
+function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
@@ -18,25 +18,17 @@ export default function SelectDropdownMonths() {
     <Listbox onChange={(e) => handleMonthSelected(e)}>
       {({ open }) => (
         <>
-          <Listbox.Label className="sr-only">
-            {" "}
-            Change published status{" "}
-          </Listbox.Label>
           <div className="relative">
             <div className="inline-flex divide-x divide-rose-600 rounded-md shadow-sm">
-              <div className="inline-flex divide-x divide-rose-600 rounded-md shadow-sm">
-                <div className="inline-flex items-center rounded-l-md border border-transparent bg-rose-500 py-2 pl-3 pr-4 text-white shadow-sm">
-                  <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                  <p className="ml-2.5 text-sm font-medium">{contextMonth}</p>
-                </div>
-                <Listbox.Button className="inline-flex items-center rounded-l-none rounded-r-md bg-rose-400 p-2 text-sm font-medium text-white hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 focus:ring-offset-gray-50">
-                  <span className="sr-only"></span>
-                  <ChevronDownIcon
-                    className="h-5 w-5 text-white"
-                    aria-hidden="true"
-                  />
-                </Listbox.Button>
+              <div className="inline-flex items-center rounded-l-md border border-transparent bg-rose-500 py-2 pl-3 pr-4 text-white shadow-sm">
+                <p className="ml-2.5 text-sm font-medium">{contextMonth}</p>
               </div>
+              <Listbox.Button className="inline-flex items-center rounded-l-none rounded-r-md bg-rose-400 p-2 text-sm font-medium text-white transition duration-150 hover:bg-rose-700 focus:outline-none">
+                <ChevronDownIcon
+                  className="h-5 w-5 text-white"
+                  aria-hidden="true"
+                />
+              </Listbox.Button>
             </div>
 
             <Transition
@@ -46,14 +38,14 @@ export default function SelectDropdownMonths() {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute right-0 z-8 mt-2 w-72 origin-top-right divide-y divide-gray-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <Listbox.Options className="absolute right-0 z-10 mt-2 w-48 origin-top-right divide-y divide-gray-200 overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 {publishingOptions.map((option) => (
                   <Listbox.Option
                     key={option}
                     className={({ active }) =>
                       classNames(
                         active ? "text-white bg-rose-500" : "text-gray-700",
-                        "cursor-default select-none p-2 text-sm"
+                        "cursor-pointer select-none p-3 text-sm transition duration-150"
                       )
                     }
                     value={option}
@@ -62,17 +54,19 @@ export default function SelectDropdownMonths() {
                       <div className="flex flex-col">
                         <div className="flex justify-between">
                           <p
-                            className={
-                              contextMonth ? "font-semibold" : "font-normal"
-                            }
+                            className={classNames(
+                              contextMonth === option
+                                ? "font-semibold"
+                                : "font-normal"
+                            )}
                           >
                             {option}
                           </p>
-                          {contextMonth ? (
+                          {contextMonth === option ? (
                             <span
-                              className={
+                              className={classNames(
                                 active ? "text-white" : "text-rose-500"
-                              }
+                              )}
                             >
                               <CheckIcon
                                 className="h-5 w-5"
@@ -81,12 +75,6 @@ export default function SelectDropdownMonths() {
                             </span>
                           ) : null}
                         </div>
-                        <p
-                          className={classNames(
-                            active ? "text-indigo-200" : "text-gray-500",
-                            "mt-2"
-                          )}
-                        ></p>
                       </div>
                     )}
                   </Listbox.Option>

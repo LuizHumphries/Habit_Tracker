@@ -15,12 +15,13 @@ export function StyledCheckbox() {
               border              
               cursor-pointer
               transition-all
+              duration-100
               before:content['']
               hover:before:opacity-10 
               checked:bg-rose-600
               checked:border-rose-300
               checked:before:bg-rose-200
-
+              rounded-sm
               w-[14px] 
               h-[14px] 
               border-rose-200

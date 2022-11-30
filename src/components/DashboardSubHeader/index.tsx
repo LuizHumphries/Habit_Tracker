@@ -31,13 +31,9 @@ export function DashboardSubHeader({
           <IoAdd className="text-rose-300 text-[24px] transition duration-150 hover:scale-105 hover:text-rose-600" />
         </button>
       </div>
-      <div className="flex ml-auto pr-6 gap-9 text-rose-300">
+      <div className="flex ml-auto pr-6 gap-5 2xl:gap-9 text-rose-300">
         {daysArray.map((days) => (
-          <div
-            key={days}
-            className="text-[14px] h-[14px]
-          w-[14px] text-center"
-          >
+          <div key={days} className="text-[14px] h-[14px] w-[14px] text-center">
             {days}
           </div>
         ))}
