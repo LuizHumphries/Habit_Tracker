@@ -40,7 +40,11 @@ export const MonthProvider = ({
 
   return (
     <MonthContext.Provider
-      value={{ contextMonth, publishingOptions, handleMonthSelected }}
+      value={{
+        contextMonth,
+        publishingOptions,
+        handleMonthSelected,
+      }}
     >
       {children}
     </MonthContext.Provider>

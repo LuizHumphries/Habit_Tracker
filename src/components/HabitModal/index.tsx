@@ -1,8 +1,8 @@
 import { FirebaseAuthInvalidCredentialsException } from "firebase";
-import { FormEvent, useContext, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import Modal from "react-modal";
 import iconClose from "../../assets/images/iconclose.svg";
-import db from "../../services/firebase";
+import { useMonth } from "../../hooks/useMonth";
 
 interface HabitModalProps {
   isOpen: boolean;
@@ -32,16 +32,52 @@ const customStyles = {
 };
 
 export function HabitModal({ isOpen, onRequestClose }: HabitModalProps) {
-  const [userHabit, setUserHabit] = useState("");
+  function PopulateMonthDays(monthdays: number, text: string) {
+    var arr = [];
+    for (var i = 0; i < monthdays; i++) {
+      arr.push(text);
+    }
+    return arr;
+  }
 
-  function handleHabitToFirebase(event: FormEvent) {
+  function daysInMonth(month: number, year: number) {
+    return new Date(year, month, 0).getDate();
+  }
+
+  const yearMonths = {
+    January: PopulateMonthDays(daysInMonth(1, new Date().getFullYear()), ""),
+    Febuary: PopulateMonthDays(daysInMonth(2, new Date().getFullYear()), ""),
+    March: PopulateMonthDays(daysInMonth(3, new Date().getFullYear()), ""),
+    April: PopulateMonthDays(daysInMonth(4, new Date().getFullYear()), ""),
+    May: PopulateMonthDays(daysInMonth(5, new Date().getFullYear()), ""),
+    June: PopulateMonthDays(daysInMonth(6, new Date().getFullYear()), ""),
+    July: PopulateMonthDays(daysInMonth(7, new Date().getFullYear()), ""),
+    August: PopulateMonthDays(daysInMonth(8, new Date().getFullYear()), ""),
+    September: PopulateMonthDays(daysInMonth(9, new Date().getFullYear()), ""),
+    October: PopulateMonthDays(daysInMonth(10, new Date().getFullYear()), ""),
+    November: PopulateMonthDays(daysInMonth(11, new Date().getFullYear()), ""),
+    December: PopulateMonthDays(daysInMonth(12, new Date().getFullYear()), ""),
+  };
+
+  const [userHabit, setUserHabit] = useState([["", yearMonths]]);
+  const [userInputHabit, setUserInputHabit] = useState("");
+
+  function handleHabitToLocalStorage(event: FormEvent, data: string) {
     event.preventDefault();
-    try {
-      return;
-    } catch (e) {
-      console.error(e);
+    if (userHabit[0][0] === "") {
+      let updatedUserHabit = [...userHabit];
+      updatedUserHabit[0][0] = data;
+      setUserHabit(updatedUserHabit);
+    } else {
+      let updatedUserHabit = [...userHabit, ["", yearMonths]];
+      console.log(updatedUserHabit);
+      updatedUserHabit[updatedUserHabit.length - 1][0] = data;
+      setUserHabit(updatedUserHabit);
     }
   }
+  useEffect(() => {
+    console.log(userHabit);
+  }, [userHabit]);
 
   return (
     <Modal isOpen={isOpen} onRequestClose={onRequestClose} style={customStyles}>
@@ -52,16 +88,20 @@ export function HabitModal({ isOpen, onRequestClose }: HabitModalProps) {
       >
         <img src={iconClose} alt="closeModal" className="h-[20px] w-[20px]" />
       </button>
-      <form className="flex flex-col items-center justify-center m-auto gap-5">
+      <form
+        onSubmit={(e) => {
+          handleHabitToLocalStorage(e, userInputHabit);
+        }}
+        className="flex flex-col items-center justify-center m-auto gap-5"
+      >
         <h2 className="mb-[5rem] text-3xl text-white">Create Your Habit</h2>
         <input
           placeholder="name"
           className="h-9 text-center  w-[25rem] bg-opacity-20 bg-gray-400 focus:outline-gray-500 border-b-2 border-gray-300 "
-          value={userHabit}
-          onChange={(event) => setUserHabit(event.target.value)}
+          onChange={(e) => setUserInputHabit(e.target.value)}
         />
         <button
-          type="button"
+          type="submit"
           className="mt-[5rem] border-solid border-1 border-rose bg-purple-600 bg-opacity-40 rounded-[1rem] w-[25rem] h-[2rem] hover:scale-105 "
         >
           Confirm
