@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { UserDashboard } from "./pages/UserDashboard";
 import { AuthProvider } from "./contexts/AuthContext";
 import { useState } from "react";
-import { SignUpModal } from "./components/LoginModal";
+import { SignUpModal } from "./components/SignUpModal";
 import Modal from "react-modal";
 
 import "./styles/tailwind.css";
@@ -36,10 +36,7 @@ export default function App() {
           isOpen={isSignUpModalOpen}
           onRequestClose={handleCloseNewSignupModal}
         />
-        <HabitModal
-          isOpen={isHabitModalOpen}
-          onRequestClose={handleCloseHabitModal}
-        />
+        <HabitModal isOpen={isHabitModalOpen} onRequestClose={handleCloseHabitModal} />
         <Routes>
           <Route
             path="/"
@@ -47,9 +44,7 @@ export default function App() {
           />
           <Route
             path="/user"
-            element={
-              <UserDashboard handleOpenHabitModal={handleOpenHabitModal} />
-            }
+            element={<UserDashboard handleOpenHabitModal={handleOpenHabitModal} />}
           />
         </Routes>
       </BrowserRouter>
