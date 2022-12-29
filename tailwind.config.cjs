@@ -2,6 +2,10 @@
 module.exports = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
+    boxShadow: {
+      HabitShadow_1: "inset 50px 50px 100px rgb(7,10,16)",
+      HabitShadow_2: "inset -50px -50px 100px rgb(27,38,62)",
+    },
     linearBorderGradients: {
       directions: {
         // defaults to these values
@@ -38,4 +42,4 @@ module.exports = {
     linearBorderGradients: ["responsive", "hover", "dark"],
   },
   plugins: [require("tailwindcss-border-gradient-radius")],
-};
+}

@@ -1,15 +1,21 @@
-import { FirebaseAuthInvalidCredentialsException } from "firebase";
-import { FormEvent, useContext, useEffect, useState } from "react";
-import Modal from "react-modal";
-import iconClose from "../../assets/images/iconclose.svg";
-import { useMonth } from "../../hooks/useMonth";
+import { FormEvent, ChangeEvent, useEffect, useState, useCallback } from "react"
+import Modal, { Styles } from "react-modal"
+import { useAuth } from "../../contexts/AuthContext"
+import { database } from "../../services/firebase"
+import iconClose from "../../assets/images/iconclose.svg"
+import { ref, set, update } from "firebase/database"
 
 interface HabitModalProps {
-  isOpen: boolean;
-  onRequestClose: () => void;
+  isOpen: boolean
+  onRequestClose: () => void
 }
 
-const customStyles = {
+interface HabitState {
+  habit: string
+  yearMonths: { [month: string]: { [day: number]: boolean } }
+}
+
+const customStyles: Styles = {
   overlay: {
     display: "flex",
     alignItems: "center",
@@ -29,84 +35,96 @@ const customStyles = {
     backgroundColor: "#ec4b6652",
     border: "2px solid rgba(244, 63, 94, 1)",
   },
-};
+}
+
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+]
 
 export function HabitModal({ isOpen, onRequestClose }: HabitModalProps) {
-  function PopulateMonthDays(monthdays: number, text: string) {
-    var arr = [];
-    for (var i = 0; i < monthdays; i++) {
-      arr.push(text);
+  const { user } = useAuth()
+  const [habitState, setHabitState] = useState<HabitState>({
+    habit: "",
+    yearMonths: {},
+  })
+
+  function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
+    setHabitState({ ...habitState, habit: event.target.value })
+  }
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    console.log(habitState)
+    update(ref(database, "users/" + user?.uid + "/habit"), {
+      [habitState.habit]: habitState,
+    }).then(() => {
+      onRequestClose()
+    })
+  }
+  let yearMonths: { [month: string]: { [day: number]: boolean } }
+
+  const setYearMonths = useCallback(() => {
+    let yearMonths: { [month: string]: { [day: number]: boolean } } = {}
+    for (let month of months) {
+      yearMonths[month] = {}
+      let numDays = new Date(2022, months.indexOf(month) + 1, 0).getDate()
+      for (let i = 1; i <= numDays; i++) {
+        yearMonths[month][i] = false
+      }
     }
-    return arr;
-  }
+    setHabitState({ ...habitState, yearMonths: yearMonths })
+  }, [setHabitState])
 
-  function daysInMonth(month: number, year: number) {
-    return new Date(year, month, 0).getDate();
-  }
-
-  const yearMonths = {
-    January: PopulateMonthDays(daysInMonth(1, new Date().getFullYear()), ""),
-    Febuary: PopulateMonthDays(daysInMonth(2, new Date().getFullYear()), ""),
-    March: PopulateMonthDays(daysInMonth(3, new Date().getFullYear()), ""),
-    April: PopulateMonthDays(daysInMonth(4, new Date().getFullYear()), ""),
-    May: PopulateMonthDays(daysInMonth(5, new Date().getFullYear()), ""),
-    June: PopulateMonthDays(daysInMonth(6, new Date().getFullYear()), ""),
-    July: PopulateMonthDays(daysInMonth(7, new Date().getFullYear()), ""),
-    August: PopulateMonthDays(daysInMonth(8, new Date().getFullYear()), ""),
-    September: PopulateMonthDays(daysInMonth(9, new Date().getFullYear()), ""),
-    October: PopulateMonthDays(daysInMonth(10, new Date().getFullYear()), ""),
-    November: PopulateMonthDays(daysInMonth(11, new Date().getFullYear()), ""),
-    December: PopulateMonthDays(daysInMonth(12, new Date().getFullYear()), ""),
-  };
-
-  const [userHabit, setUserHabit] = useState([["", yearMonths]]);
-  const [userInputHabit, setUserInputHabit] = useState("");
-
-  function handleHabitToLocalStorage(event: FormEvent, data: string) {
-    event.preventDefault();
-    if (userHabit[0][0] === "") {
-      let updatedUserHabit = [...userHabit];
-      updatedUserHabit[0][0] = data;
-      setUserHabit(updatedUserHabit);
-    } else {
-      let updatedUserHabit = [...userHabit, ["", yearMonths]];
-      console.log(updatedUserHabit);
-      updatedUserHabit[updatedUserHabit.length - 1][0] = data;
-      setUserHabit(updatedUserHabit);
-    }
-  }
   useEffect(() => {
-    console.log(userHabit);
-  }, [userHabit]);
+    setYearMonths()
+  }, [])
 
   return (
-    <Modal isOpen={isOpen} onRequestClose={onRequestClose} style={customStyles}>
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onRequestClose}
+      style={customStyles}
+    >
       <button
         type="button"
         onClick={onRequestClose}
-        className="absolute right-[1.5rem] top-[1.5rem] border-0 background-transparent"
+        className="background-transparent absolute right-[1.5rem] top-[1.5rem] border-0"
       >
-        <img src={iconClose} alt="closeModal" className="h-[20px] w-[20px]" />
+        <img
+          src={iconClose}
+          alt="closeModal"
+          className="h-[20px] w-[20px]"
+        />
       </button>
       <form
-        onSubmit={(e) => {
-          handleHabitToLocalStorage(e, userInputHabit);
+        onSubmit={e => {
+          handleSubmit(e)
         }}
-        className="flex flex-col items-center justify-center m-auto gap-5"
+        className="m-auto flex flex-col items-center justify-center gap-5"
       >
         <h2 className="mb-[5rem] text-3xl text-white">Create Your Habit</h2>
         <input
           placeholder="name"
-          className="h-9 text-center  w-[25rem] bg-opacity-20 bg-gray-400 focus:outline-gray-500 border-b-2 border-gray-300 "
-          onChange={(e) => setUserInputHabit(e.target.value)}
+          className="h-9 w-[25rem]  border-b-2 border-gray-300 bg-gray-400 bg-opacity-20 text-center focus:outline-gray-500 "
+          onChange={e => handleInputChange(e)}
         />
         <button
           type="submit"
-          className="mt-[5rem] border-solid border-1 border-rose bg-purple-600 bg-opacity-40 rounded-[1rem] w-[25rem] h-[2rem] hover:scale-105 "
+          className="border-1 border-rose mt-[5rem] h-[2rem] w-[25rem] rounded-[1rem] border-solid bg-purple-600 bg-opacity-40 hover:scale-105 "
         >
           Confirm
         </button>
       </form>
     </Modal>
-  );
+  )
 }
