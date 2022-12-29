@@ -1,7 +1,6 @@
 import { MonthProvider } from "../contexts/MonthContext"
 import { DashboardHeader } from "../components/DashboardHeader"
 import { DashboardSubHeader } from "../components/DashboardSubHeader"
-import { Habit } from "../components/Habit"
 import { DashboardFooter } from "../components/DashboardFooter"
 
 interface UserDashboardProps {
@@ -15,7 +14,7 @@ export function UserDashboard({ handleOpenHabitModal }: UserDashboardProps) {
         <DashboardHeader />
         <DashboardSubHeader handleOpenHabitModal={handleOpenHabitModal} />
         <main className="align-center mb-auto h-full bg-gray-900 text-center text-white">
-          <Habit name={"teste"} />
+          Falta pegar os dados do firebase
         </main>
         <DashboardFooter />
       </div>
