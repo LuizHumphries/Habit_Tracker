@@ -71,7 +71,6 @@ export function HabitModal({ isOpen, onRequestClose }: HabitModalProps) {
       onRequestClose()
     })
   }
-  let yearMonths: { [month: string]: { [day: number]: boolean } }
 
   const setYearMonths = useCallback(() => {
     let yearMonths: { [month: string]: { [day: number]: boolean } } = {}
