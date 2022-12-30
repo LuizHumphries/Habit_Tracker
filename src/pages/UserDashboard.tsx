@@ -37,27 +37,15 @@ export function UserDashboard({ handleOpenHabitModal }: UserDashboardProps) {
       <DashboardHeader />
       <DashboardSubHeader handleOpenHabitModal={handleOpenHabitModal} />
       <main className="align-center mb-auto h-full bg-gray-900 text-center text-white">
-        {habits.map(
-          (item) => (
-            Object.entries(item.yearMonths[contextMonth]).map(
+        {habits.map((item) => (
+          <Habit
+            key={item.habit}
+            name={item.habit}
+            days={Object.entries(item.yearMonths[contextMonth]).map(
               ([, value]) => value
-            ),
-            console.log(
-              Object.entries(item.yearMonths[contextMonth]).map(
-                ([, value]) => value
-              )
-            ),
-            (
-              <Habit
-                key={item.habit}
-                name={item.habit}
-                days={Object.entries(item.yearMonths[contextMonth]).map(
-                  ([, value]) => value
-                )}
-              />
-            )
-          )
-        )}
+            )}
+          />
+        ))}
       </main>
       <DashboardFooter />
     </div>
