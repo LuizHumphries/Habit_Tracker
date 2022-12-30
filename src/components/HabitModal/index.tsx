@@ -1,18 +1,24 @@
-import { FormEvent, ChangeEvent, useEffect, useState, useCallback } from "react"
-import Modal, { Styles } from "react-modal"
-import { useAuth } from "../../contexts/AuthContext"
-import { database } from "../../services/firebase"
-import iconClose from "../../assets/images/iconclose.svg"
-import { ref, set, update } from "firebase/database"
+import {
+  FormEvent,
+  ChangeEvent,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
+import Modal, { Styles } from "react-modal";
+import { useAuth } from "../../contexts/AuthContext";
+import { database } from "../../services/firebase";
+import iconClose from "../../assets/images/iconclose.svg";
+import { ref, set, update } from "firebase/database";
 
 interface HabitModalProps {
-  isOpen: boolean
-  onRequestClose: () => void
+  isOpen: boolean;
+  onRequestClose: () => void;
 }
 
 interface HabitState {
-  habit: string
-  yearMonths: { [month: string]: { [day: number]: boolean } }
+  habit: string;
+  yearMonths: { [month: string]: { [day: number]: boolean } };
 }
 
 const customStyles: Styles = {
@@ -35,7 +41,7 @@ const customStyles: Styles = {
     backgroundColor: "#ec4b6652",
     border: "2px solid rgba(244, 63, 94, 1)",
   },
-}
+};
 
 const months = [
   "January",
@@ -50,64 +56,56 @@ const months = [
   "October",
   "November",
   "December",
-]
+];
 
 export function HabitModal({ isOpen, onRequestClose }: HabitModalProps) {
-  const { user } = useAuth()
+  const { user } = useAuth();
   const [habitState, setHabitState] = useState<HabitState>({
     habit: "",
     yearMonths: {},
-  })
+  });
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
-    setHabitState({ ...habitState, habit: event.target.value })
+    setHabitState({ ...habitState, habit: event.target.value });
   }
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    console.log(habitState)
+    event.preventDefault();
+    console.log(habitState);
     update(ref(database, "users/" + user?.uid + "/habit"), {
       [habitState.habit]: habitState,
     }).then(() => {
-      onRequestClose()
-    })
+      onRequestClose();
+    });
   }
 
   const setYearMonths = useCallback(() => {
-    let yearMonths: { [month: string]: { [day: number]: boolean } } = {}
+    let yearMonths: { [month: string]: { [day: number]: boolean } } = {};
     for (let month of months) {
-      yearMonths[month] = {}
-      let numDays = new Date(2022, months.indexOf(month) + 1, 0).getDate()
+      yearMonths[month] = {};
+      let numDays = new Date(2022, months.indexOf(month) + 1, 0).getDate();
       for (let i = 1; i <= numDays; i++) {
-        yearMonths[month][i] = false
+        yearMonths[month][i] = false;
       }
     }
-    setHabitState({ ...habitState, yearMonths: yearMonths })
-  }, [setHabitState])
+    setHabitState({ ...habitState, yearMonths: yearMonths });
+  }, [setHabitState]);
 
   useEffect(() => {
-    setYearMonths()
-  }, [])
+    setYearMonths();
+  }, []);
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onRequestClose}
-      style={customStyles}
-    >
+    <Modal isOpen={isOpen} onRequestClose={onRequestClose} style={customStyles}>
       <button
         type="button"
         onClick={onRequestClose}
         className="background-transparent absolute right-[1.5rem] top-[1.5rem] border-0"
       >
-        <img
-          src={iconClose}
-          alt="closeModal"
-          className="h-[20px] w-[20px]"
-        />
+        <img src={iconClose} alt="closeModal" className="h-[20px] w-[20px]" />
       </button>
       <form
-        onSubmit={e => {
-          handleSubmit(e)
+        onSubmit={(e) => {
+          handleSubmit(e);
         }}
         className="m-auto flex flex-col items-center justify-center gap-5"
       >
@@ -115,7 +113,7 @@ export function HabitModal({ isOpen, onRequestClose }: HabitModalProps) {
         <input
           placeholder="name"
           className="h-9 w-[25rem]  border-b-2 border-gray-300 bg-gray-400 bg-opacity-20 text-center focus:outline-gray-500 "
-          onChange={e => handleInputChange(e)}
+          onChange={(e) => handleInputChange(e)}
         />
         <button
           type="submit"
@@ -125,5 +123,5 @@ export function HabitModal({ isOpen, onRequestClose }: HabitModalProps) {
         </button>
       </form>
     </Modal>
-  )
+  );
 }

@@ -5,7 +5,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { useState } from "react";
 import { SignUpModal } from "./components/SignUpModal";
 import Modal from "react-modal";
-
+import { MonthContext, MonthProvider } from "./contexts/MonthContext";
 import "./styles/tailwind.css";
 import { HabitModal } from "./components/HabitModal";
 
@@ -32,21 +32,29 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <SignUpModal
-          isOpen={isSignUpModalOpen}
-          onRequestClose={handleCloseNewSignupModal}
-        />
-        <HabitModal isOpen={isHabitModalOpen} onRequestClose={handleCloseHabitModal} />
-        <Routes>
-          <Route
-            path="/"
-            element={<Home onOpenSignupModal={handleOpenNewSignupModal} />}
+        <MonthProvider>
+          <SignUpModal
+            isOpen={isSignUpModalOpen}
+            onRequestClose={handleCloseNewSignupModal}
           />
-          <Route
-            path="/user"
-            element={<UserDashboard handleOpenHabitModal={handleOpenHabitModal} />}
+          <HabitModal
+            isOpen={isHabitModalOpen}
+            onRequestClose={handleCloseHabitModal}
           />
-        </Routes>
+          <Routes>
+            <Route
+              path="/"
+              element={<Home onOpenSignupModal={handleOpenNewSignupModal} />}
+            />
+
+            <Route
+              path="/user"
+              element={
+                <UserDashboard handleOpenHabitModal={handleOpenHabitModal} />
+              }
+            />
+          </Routes>
+        </MonthProvider>
       </BrowserRouter>
     </AuthProvider>
   );

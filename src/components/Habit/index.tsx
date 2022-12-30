@@ -1,39 +1,37 @@
-import { useMonth } from "../../hooks/useMonth"
-import { StyledCheckbox } from "../StyledCheckbox"
+import { ref, remove } from "firebase/database";
+import { IoTrashOutline } from "react-icons/io5";
+import { useAuth } from "../../contexts/AuthContext";
+import { database } from "../../services/firebase";
+import { StyledCheckbox } from "../StyledCheckbox";
 
 interface HabitProps {
-  name: string
+  name: string;
+  days: boolean[];
 }
 
-export function Habit({ name }: HabitProps) {
-  const { contextMonth } = useMonth()
+export function Habit({ name, days }: HabitProps) {
+  const { user } = useAuth();
 
-  function getMonthFromString(mon: string) {
-    return new Date(Date.parse(mon + " 1, 2012")).getMonth() + 1
+  function handleDelete() {
+    remove(ref(database, "users/" + user?.uid + "/habit/" + name));
   }
-
-  function daysInMonth(month: number, year: number) {
-    return new Date(year, month, 0).getDate()
-  }
-  const maxDaysMonth = daysInMonth(
-    getMonthFromString(contextMonth),
-    new Date().getFullYear()
-  )
-
-  const daysArray = Array.from(Array(maxDaysMonth), (e, i) => i + 1)
-
   return (
-    <div className="shadow-2xl flex items-center justify-center rounded-[40px] p-[2rem] text-center shadow-HabitShadow_1 shadow-HabitShadow_2">
-      <div className="flex w-[256px] max-w-[256px] items-center justify-center text-center ">
-        {name}
+    <div className="shadow-2xl mt-5 flex items-center justify-center rounded-[40px] p-[2rem] text-center shadow-HabitShadow_1 shadow-HabitShadow_2 first:mt-0">
+      <div className="flex">
+        <button onClick={handleDelete}>
+          <IoTrashOutline />
+        </button>
+        <div className="flex w-[256px] max-w-[256px] items-center justify-center text-center ">
+          {name}
+        </div>
       </div>
-      <div className="shadow ml-auto flex gap-5 pr-6 2xl:gap-9">
-        {daysArray.map(days => (
-          <div key={days}>
+      <div className="ml-auto flex gap-5 pr-6 2xl:gap-9">
+        {days.map((day, index) => (
+          <div key={index - 1}>
             <StyledCheckbox />
           </div>
         ))}
       </div>
     </div>
-  )
+  );
 }

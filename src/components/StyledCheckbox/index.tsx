@@ -4,27 +4,27 @@ export function StyledCheckbox() {
       className="
     relative
     flex
-    items-center
-    cursor-pointer    
+    cursor-pointer
+    items-center    
     "
     >
       <input
         type="checkbox"
         className="
-              appearance-none
-              border              
+              before:content['']
+              h-[14px]              
+              w-[14px]
               cursor-pointer
+              appearance-none
+              rounded-sm
+              border 
+              border-rose-200
               transition-all
               duration-100
-              before:content['']
-              hover:before:opacity-10 
-              checked:bg-rose-600
               checked:border-rose-300
-              checked:before:bg-rose-200
-              rounded-sm
-              w-[14px] 
-              h-[14px] 
-              border-rose-200
+              checked:bg-rose-600 
+              checked:before:bg-rose-200 
+              hover:before:opacity-10
               "
         id="checkbox"
       ></input>
