@@ -27,8 +27,8 @@ export function Habit({ name, days }: HabitProps) {
       </div>
       <div className="ml-auto flex gap-5 pr-6 2xl:gap-9">
         {days.map((day, index) => (
-          <div key={index - 1}>
-            <StyledCheckbox />
+          <div key={index}>
+            <StyledCheckbox name={name} index={index} />
           </div>
         ))}
       </div>

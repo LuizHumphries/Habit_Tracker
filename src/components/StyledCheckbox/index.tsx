@@ -1,4 +1,32 @@
-export function StyledCheckbox() {
+import { ref, update } from "firebase/database";
+import { useContext, useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
+import { MonthContext } from "../../contexts/MonthContext";
+import { database } from "../../services/firebase";
+
+interface StyledCheckboxProps {
+  name: string;
+  index: number;
+}
+
+export function StyledCheckbox({ name, index }: StyledCheckboxProps) {
+  const { user } = useAuth();
+  const { contextMonth } = useContext(MonthContext);
+  const [checked, setChecked] = useState(false);
+  console.log(checked);
+
+  function handleClickedCheck() {
+    setChecked(!checked);
+    update(
+      ref(
+        database,
+        "users/" + user?.uid + "/habit/" + name + "/yearMonths/" + contextMonth
+      ),
+      {
+        [index]: checked,
+      }
+    );
+  }
   return (
     <label
       className="
@@ -27,6 +55,8 @@ export function StyledCheckbox() {
               hover:before:opacity-10
               "
         id="checkbox"
+        defaultChecked={checked}
+        onChange={handleClickedCheck}
       ></input>
     </label>
   );
