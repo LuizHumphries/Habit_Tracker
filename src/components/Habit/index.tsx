@@ -7,16 +7,19 @@ import { StyledCheckbox } from "../StyledCheckbox";
 interface HabitProps {
   name: string;
   days: boolean[];
+  getHabitsData: () => Promise<void>;
 }
 
-export function Habit({ name, days }: HabitProps) {
+export function Habit({ name, days, getHabitsData }: HabitProps) {
   const { user } = useAuth();
 
-  function handleDelete() {
-    remove(ref(database, "users/" + user?.uid + "/habit/" + name));
+  async function handleDelete() {
+    await remove(ref(database, "users/" + user?.uid + "/habit/" + name));
+    getHabitsData();
   }
+
   return (
-    <div className="shadow-2xl mt-5 flex items-center justify-center rounded-[40px] p-[2rem] text-center shadow-HabitShadow_1 shadow-HabitShadow_2 first:mt-0">
+    <div className="shadow-2xl mt-5 flex items-center justify-center rounded-[40px] p-[2rem] text-center shadow-HabitShadow_2 first:mt-0">
       <div className="flex">
         <button onClick={handleDelete}>
           <IoTrashOutline />

@@ -4,6 +4,7 @@ import {
   useState,
   useContext,
   createContext,
+  useMemo,
 } from "react";
 import { auth } from "../services/firebase";
 import {
@@ -67,13 +68,16 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
     return unsubsrcibe;
   }, []);
 
-  const values = {
-    signUp,
-    user,
-    signIn,
-    logOff,
-    auth,
-  };
+  const values = useMemo(
+    () => ({
+      signUp,
+      user,
+      signIn,
+      logOff,
+      auth,
+    }),
+    [user]
+  );
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };

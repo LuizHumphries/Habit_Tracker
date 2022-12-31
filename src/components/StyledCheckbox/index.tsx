@@ -13,7 +13,6 @@ export function StyledCheckbox({ name, index }: StyledCheckboxProps) {
   const { user } = useAuth();
   const { contextMonth } = useContext(MonthContext);
   const [checked, setChecked] = useState(false);
-  console.log(checked);
 
   function handleClickedCheck() {
     setChecked(!checked);
@@ -27,6 +26,7 @@ export function StyledCheckbox({ name, index }: StyledCheckboxProps) {
       }
     );
   }
+
   return (
     <label
       className="
@@ -57,7 +57,7 @@ export function StyledCheckbox({ name, index }: StyledCheckboxProps) {
         id="checkbox"
         defaultChecked={checked}
         onChange={handleClickedCheck}
-      ></input>
+      />
     </label>
   );
 }

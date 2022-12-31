@@ -4,6 +4,7 @@ import {
   useEffect,
   useState,
   useCallback,
+  useMemo,
 } from "react";
 import Modal, { Styles } from "react-modal";
 import { useAuth } from "../../contexts/AuthContext";
@@ -13,11 +14,16 @@ import { ref, set, update } from "firebase/database";
 
 interface HabitModalProps {
   isOpen: boolean;
-  onRequestClose: () => void;
+  onCloseHabitModal: () => void;
+  getHabitsData: () => Promise<void>;
 }
 
-interface HabitState {
-  habit: string;
+//interface HabitState {
+//  habit: string;
+//  yearMonths: { [month: string]: { [day: number]: boolean } };
+//}
+
+interface YearMonths {
   yearMonths: { [month: string]: { [day: number]: boolean } };
 }
 
@@ -58,48 +64,54 @@ const months = [
   "December",
 ];
 
-export function HabitModal({ isOpen, onRequestClose }: HabitModalProps) {
+export function HabitModal({
+  isOpen,
+  onCloseHabitModal,
+  getHabitsData,
+}: HabitModalProps) {
   const { user } = useAuth();
-  const [habitState, setHabitState] = useState<HabitState>({
-    habit: "",
-    yearMonths: {},
-  });
+  const [habitState, setHabitState] = useState("");
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
-    setHabitState({ ...habitState, habit: event.target.value });
-  }
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    console.log(habitState);
-    update(ref(database, "users/" + user?.uid + "/habit"), {
-      [habitState.habit]: habitState,
-    }).then(() => {
-      onRequestClose();
-    });
+    setHabitState(event.target.value);
   }
 
-  const setYearMonths = useCallback(() => {
+  const setYearMonths = useMemo(() => {
     let yearMonths: { [month: string]: { [day: number]: boolean } } = {};
+
     for (let month of months) {
       yearMonths[month] = {};
+
       let numDays = new Date(2022, months.indexOf(month) + 1, 0).getDate();
+
       for (let i = 1; i <= numDays; i++) {
         yearMonths[month][i] = false;
       }
     }
-    setHabitState({ ...habitState, yearMonths: yearMonths });
-  }, [setHabitState]);
+    return yearMonths;
+  }, [habitState]);
 
-  useEffect(() => {
-    setYearMonths();
-  }, []);
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    await update(ref(database, "users/" + user?.uid + "/habit"), {
+      [habitState]: { name: habitState, yearMonths: setYearMonths },
+    });
+
+    getHabitsData();
+    onCloseHabitModal();
+  }
 
   return (
-    <Modal isOpen={isOpen} onRequestClose={onRequestClose} style={customStyles}>
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onCloseHabitModal}
+      style={customStyles}
+    >
       <button
         type="button"
-        onClick={onRequestClose}
-        className="background-transparent absolute right-[1.5rem] top-[1.5rem] border-0"
+        onClick={onCloseHabitModal}
+        className="background-transparent absolute right-[1.5rem] top-[1.5rem] border-0 transition duration-150 hover:scale-125"
       >
         <img src={iconClose} alt="closeModal" className="h-[20px] w-[20px]" />
       </button>
@@ -117,7 +129,7 @@ export function HabitModal({ isOpen, onRequestClose }: HabitModalProps) {
         />
         <button
           type="submit"
-          className="border-1 border-rose mt-[5rem] h-[2rem] w-[25rem] rounded-[1rem] border-solid bg-purple-600 bg-opacity-40 hover:scale-105 "
+          className="border-1 border-rose mt-[5rem] h-[2rem] w-[25rem] rounded-[1rem] border-solid bg-purple-600 bg-opacity-40 transition duration-150 hover:scale-105 "
         >
           Confirm
         </button>
